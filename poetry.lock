@@ -1094,12 +1094,14 @@ setuptools = ">=42.0.0"
 
 [[package]]
 name = "pylinac"
-version = "3.26.0"
+version = "3.27.0"
 description = "A toolkit for performing TG-142 QA-related tasks on a linear accelerator"
 optional = false
 python-versions = ">=3.8"
-files = []
-develop = false
+files = [
+    {file = "pylinac-3.27.0-py3-none-any.whl", hash = "sha256:b2df5bc476931bf9173da414adee2755fd446f90bc43ca23222dd9c4a915fc45"},
+    {file = "pylinac-3.27.0.tar.gz", hash = "sha256:e5fca2ef9ed70abab0ffd77a2ebaea6a270e0f08377204cbf44f33b2a877bb99"},
+]
 
 [package.dependencies]
 argue = ">=0.3.1,<0.4.0"
@@ -1120,12 +1122,6 @@ tqdm = ">=3.8"
 [package.extras]
 dev = ["furo", "google-cloud-storage", "hatch", "nox", "parameterized", "pre-commit", "pytest", "pytest-cov", "pytest-xdist", "sphinx", "sphinx-autobuild", "sphinx-copybutton", "sphinx-design"]
 docs = ["autodoc-pydantic", "furo", "sphinx", "sphinx-copybutton", "sphinx-design"]
-
-[package.source]
-type = "git"
-url = "https://github.com/jinkoo2/pylinac.git"
-reference = "6d69cb005b275ff7abfd7ab8c9cdcb8f8f6c82a4"
-resolved_reference = "6d69cb005b275ff7abfd7ab8c9cdcb8f8f6c82a4"
 
 [[package]]
 name = "pyparsing"
@@ -1533,20 +1529,6 @@ slack = ["slack-sdk"]
 telegram = ["requests"]
 
 [[package]]
-name = "ttkbootstrap"
-version = "1.10.1"
-description = "A supercharged theme extension for tkinter that enables on-demand modern flat style themes inspired by Bootstrap."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "ttkbootstrap-1.10.1-py3-none-any.whl", hash = "sha256:c6a10ee5ea64051a0f8b75c20ef8e5f2417c62b4d0858c831683d4f2135aa573"},
-    {file = "ttkbootstrap-1.10.1.tar.gz", hash = "sha256:53925525c4104f9e345627500dced2d0392ad74324b2a81467aaee3ffbe1a474"},
-]
-
-[package.dependencies]
-pillow = ">=8.2.0"
-
-[[package]]
 name = "typing-extensions"
 version = "4.12.2"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -1577,4 +1559,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.14"
-content-hash = "142458bd06ec51d37384d9362e9c24a2b63276a7cd9d4e3cf4379f5dde8e2b8f"
+content-hash = "fa4780b6f67a8b53a5be88865c946eb83fded879c4d1f0853fab73510f9474d7"
