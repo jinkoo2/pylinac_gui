@@ -8,10 +8,6 @@ import utils.object as object
 def copy_logo(config, output_dir, log_message):
     # copy logo file
     logo_file = config['publish_pdf_params']['logo']
-    if not os.path.exists(logo_file):
-        # check the current folder
-        cwd = helper.get_cwd()
-        log_file = os.path.join(cwd, log_file)
 
     if os.path.exists(logo_file):
         log_filename = os.path.basename(logo_file)

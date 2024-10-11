@@ -13,6 +13,15 @@ import utils.webservice as webservice
 import dicom_helper
 import importlib
 
+import sys
+
+import phantoms.catphan
+import phantoms.fc2
+import phantoms.lasvegas
+import phantoms.qckv
+import phantoms.qc3
+import phantoms.helper
+import phantoms.leedstor
 
 from dicom_chooser import DicomChooser, SelectionMode
 
@@ -32,6 +41,16 @@ def show_splash_screen():
     splash.update()
     time.sleep(2)  # Simulate some loading time (2 seconds)
     splash.destroy()  # Close the splash screen
+
+def get_cwd():
+    if getattr(sys, 'frozen', False):
+        # If running as a compiled executable
+        current_folder = os.path.dirname(sys.executable)
+    else:
+        # If running as a script
+        current_folder = os.path.dirname(os.path.abspath(__file__))
+    
+    return current_folder
 
 def find_obj_of_id(objs, id):
     for obj in objs:
@@ -197,8 +216,6 @@ class PyLinacGuiApp:
         if performed_by:
             self.performed_by_combobox.set(performed_by)
 
-
-
     def on_site_combobox_changed(self, event):
         selected_value = self.site_combobox.get()
         print(f"Selected value: {selected_value}")
@@ -221,15 +238,14 @@ class PyLinacGuiApp:
         self.device_combobox['values'] = device_ids
         self.device_combobox.set('')
 
+
     def load_config(self):
         # config file path
-        current_file_path = os.path.abspath(__file__)
-        current_dir = os.path.dirname(current_file_path)
+        current_dir = get_cwd()
         config_file = os.path.join(current_dir, 'config.json')
 
         if not os.path.exists(config_file):
-            messagebox.showerror("Config file not found. It should be in the same folder of this executablel file")
-            return
+            raise Exception(f"Config file ({config_file}) not found. It should be in the same folder of this executablel file")
 
         return read_json_file(config_file)
 
@@ -257,8 +273,7 @@ class PyLinacGuiApp:
 
     def load_phantom_config(self):
         # config file path
-        current_file_path = os.path.abspath(__file__)
-        current_dir = os.path.dirname(current_file_path)
+        current_dir = get_cwd()
         
         site = self.site().lower()
         device = self.device().lower()
@@ -278,12 +293,18 @@ class PyLinacGuiApp:
         self.performed_by_combobox['values'] = user_list
 
     def select_input_folder(self):
-        folder = filedialog.askdirectory()
+        initdir=self.input_folder_path.cget('text')
+        if initdir.strip()=='':
+            initdir = None
+        folder = filedialog.askdirectory(initialdir=initdir)
         if folder:
             self.input_folder_path.config(text=folder)
             
     def select_output_folder(self):
-        folder = filedialog.askdirectory()
+        initdir=self.output_folder_path.cget('text')
+        if initdir.strip()=='':
+            initdir = None
+        folder = filedialog.askdirectory(initialdir=initdir)
         if folder:
             self.output_folder_path.config(text=folder)
 
@@ -454,11 +475,16 @@ class PyLinacGuiApp:
         return folder
 
     def get_case_output_folder(self, dicom_image_file):
-        # get acquistion datetime
-        acq_dt_str = dicom_helper.get_study_datetime_str(dicom_image_file)
 
+        try:
+            self.log('Getting instance creation date time from the dicom file...')
+            dt_str = dicom_helper.get_instance_creation_datetime_str(dicom_image_file)
+        except Exception as e:
+            self.log('No instance creation date time found either. Using performed date.')
+            dt_str = self.performed_by_combobox.get().replace('-', '')+'_000000'
+        
         # copy all selected files 
-        folder = os.path.join(self.get_phantom_folder(), acq_dt_str)
+        folder = os.path.join(self.get_phantom_folder(), dt_str)
 
         if not os.path.exists(folder):
             self.log(f'folder not found. createing a folder: {folder}')
